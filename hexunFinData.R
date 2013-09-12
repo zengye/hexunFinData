@@ -11,8 +11,8 @@
 # values for the argument "type": the argument "type" specifies
 # the sub-category of financial data. Details are as listed in
 # the following:
-#   zxcwzb: 最新财务 / Latest Financial Data in English
-#   cwbl: 财务比率 / Latest Financial Ratios in English
+#   zxcwzb: 最新财务 / Latest Financial Data
+#   cwbl: 财务比率 / Latest Financial Ratios
 #   zcfz: 资产负债 / Assets and Liabilities
 #   lr: 利润 / Profit
 #   xjll: 现金流量 / Cash Flow
@@ -25,6 +25,7 @@
 ####################################################################
 
 source("/mnt/windows/project/r/hexundata/getzxcwzb.R")
+source("/mnt/windows/project/r/hexundata/getcwbl.R")
 
 getHexunFin <- function(stockid,type="zxcwzb",...){
   if(!is.vector(stockid) || !is.vector(type) || length(stockid)*length(type) == 0){
@@ -48,11 +49,12 @@ getHexunFin <- function(stockid,type="zxcwzb",...){
   }
   
   stockfin <- list()
-  for (i in 1:length(stockid))
-    for(j in 1:length(type)){
-      stockfin[[stockid[i]]] <- list()
+  for (i in 1:length(stockid)){
+    stockfin[[stockid[i]]] <- list()
+    for(j in 1:length(type))
       stockfin[[stockid[i]]][[type[j]]] <- get(paste("get",type[j],sep=""))(stockid[i],...)
-    }
+  }
+
   
   return(stockfin)
 }
